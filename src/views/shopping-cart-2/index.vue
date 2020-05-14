@@ -5,7 +5,7 @@
       <thead>
         <tr>
           <th style="text-align: center; width:60px" class="cart-th">
-            <input id="checkAll" type="checkbox" class="checkAll" @click="checkAllOrNot($event)">
+            <input id="checkAll" v-model="allChecked" type="checkbox" class="checkAll" @click="checkAllOrNot()">
           </th>
           <th class="cart-th" style="text-align: center; width:60px">序号</th>
           <th class="cart-th" style="text-align: center; width:60px">名称</th>
@@ -20,7 +20,7 @@
       <tbody>
         <tr v-for="(item,index) in list" :key="index">
           <td style="text-align: center;" class="cart-td">
-            <input type="checkbox" class="checkItem" @click="checkItem($event,index)">
+            <input v-model="item.checked" type="checkbox" class="checkItem" @click="checkItem(index)">
           </td>
           <td class="cart-td">{{ index+1 }}</td>
           <td class="cart-td">{{ item.name }}</td>
@@ -51,20 +51,26 @@ export default {
   components: {},
   data() {
     return {
+      // 全选
+      allChecked: false,
+
       // 商品列表
       list: [{
+        checked: false,
         id: 1,
         name: 'iPhone11 Pro Max',
         price: 12999,
         count: 1
       },
       {
+        checked: false,
         id: 2,
         name: 'iPhone11',
         price: 5999,
         count: 1
       },
       {
+        checked: false,
         id: 3,
         name: '小米10 Pro',
         price: 5999,
@@ -104,8 +110,6 @@ export default {
     // 删除按钮函数
     handleRemove(index) {
       this.list.splice(index, 1)
-      // var items = document.querySelectorAll('.checkItem')
-      // items[index].style.display = 'none'
 
       // 获取商品序号
       var id = index + 1
@@ -115,48 +119,42 @@ export default {
         if (item.id === id) {
           this.checkList.splice(i, 1)
         }
-        if (this.checkList.length === 0) {
-          document.querySelector('.checkAll').checked = false
-        } else if (this.checkList.length === this.list.length) {
-          document.querySelector('.checkAll').checked = true
+        if ((this.checkList.length === 0) || (this.list.length === 0)) {
+          this.allChecked = false
         }
+      }
+      for (i = 0; i < this.list.length; i++) {
+        if (this.list[i].checked === false) {
+          this.allChecked = false
+        } else { this.allChecked = true }
       }
     },
 
     // 全选或全不选
-    checkAllOrNot(event) {
-      if (event.target.checked) {
+    checkAllOrNot() {
+      if (this.allChecked === false) {
         // 全选
-        this.checkInItems('checkAll')
+        for (var i = 0; i < this.list.length; i++) {
+          var item = this.list[i]
+          item.checked = true
+        }
         this.checkList = this.list.concat() // 全选时把商品列表赋给选中列表数组
       } else {
         // 全不选
-        this.checkInItems('noCheckAll')
+        for (i = 0; i < this.list.length; i++) {
+          item = this.list[i]
+          item.checked = false
+        }
         this.checkList.splice(0) // 清空数组
       }
     },
 
-    // 全选或全不选时，每一项选择框是否被选中
-    checkInItems(type) {
-      var items = document.querySelectorAll('.checkItem')// 找到每一项选择框
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i]
-        if (type === 'checkAll') {
-          item.checked = true
-        } else {
-          item.checked = false
-        }
-      }
-    },
-
     // 勾选或不勾选
-    checkItem(event, index) {
-      var element = event.target
-      var $allCheck = document.querySelector('.checkAll')
-      if (element.checked) {
+    checkItem(index) {
+      if (this.list[index].checked === false) {
         // 勾选，加入已选择列表
         this.checkList.push(this.list[index])
-        this.checkAllElement($allCheck)
+        this.checkAll()
       } else {
         // 不勾选，从已选择列表中去除
         var id = index + 1
@@ -167,15 +165,15 @@ export default {
             this.checkList.splice(i, 1)
           }
         }
-        $allCheck.checked = false
+        this.allChecked = false
       }
     },
 
     // 当所有的商品都已被勾选，勾选全选框
-    checkAllElement(element) {
+    checkAll() {
       // 如果所有的商品都已被勾选，则勾选全选框
       if (this.checkList.length === this.list.length) {
-        element.checked = true
+        this.allChecked = true
       }
     }
   }
@@ -213,7 +211,7 @@ export default {
 }
 
 .cart-th {
-	font: bold 12px "微软雅黑";
+	font: bold 14px "微软雅黑";
   color: #606266;
   border: 1px solid #EBEEF5;
   border-left: none;
@@ -237,19 +235,19 @@ export default {
 	width: 20px;
 	height: 20px;
 	border-radius: 5px;
-	border: 1px solid #67C23A;
-	background: #67C23A;
+	border: 1px solid #DCDFE6;
+	background: #DCDFE6;
 	cursor: pointer;
-  color: #ffffff;
+  color: #606266;
 }
 
 .btns {
 	width: 40px;
 	height: 20px;
 	border-radius: 5px;
-	border: 1px solid #67C23A;
-	background: #67C23A;
-	color: #ffffff;
+	border: 1px solid #DCDFE6;
+	background: #DCDFE6;
+	color: #606266;
 	line-height: 20px;
 	cursor: pointer;
 }

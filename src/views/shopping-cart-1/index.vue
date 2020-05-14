@@ -1,7 +1,7 @@
 <template>
   <div class="cart">
-    <div class="group_btn">
-      <el-button type="success" @click="addDialog">添加</el-button>
+    <div class="group-btn">
+      <el-button type="success" class="g-btn" @click="addDialog">添加</el-button>
     </div>
     <el-table
       :data="tableData"
@@ -29,7 +29,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="total_warpper">
+    <div class="total-warpper">
       <h3>共计：¥{{ totalPrice }}</h3>
       <h3>总数：{{ totalNumber }}</h3>
     </div>
@@ -96,7 +96,7 @@ export default {
         price_total +=
           this.multipleSelection[i].price * this.multipleSelection[i].number
       }
-      return price_total
+      return price_total.toLocaleString()
     },
     // 总数
     totalNumber() {
@@ -122,7 +122,9 @@ export default {
     // 点击添加弹窗的确定按钮
     addSureBtn() {
       this.addIsDialog = false
-      this.tableData.push(this.formData)
+      if (((this.formData.name !== '') && (typeof (this.formData.name) === 'string')) && ((this.formData.price !== '') && (isNaN(this.formData.price) === false)) && ((this.formData.number !== '') && (isNaN(this.formData.number) === false))) {
+        this.tableData.push(this.formData)
+      } else { alert('请输入正确的添加信息!不能为空。') }
       // 初始化添加表单
       this.formData = {
         name: '',
@@ -140,23 +142,41 @@ export default {
   margin: 50px auto;
   width: 651px;
 }
-.group_btn {
+.group-btn {
   margin-bottom: 30px;
 }
-.addDialog .el-input {
-  width: 90%;
+
+.addDialog{
+  width: 651px;
+  position: fixed;
+  top: 275px;
+  left: 255px;
+  overflow: auto;
+  margin: 0 auto;
 }
-.total_warpper {
+
+.el-input {
+  width: 244px;
+}
+
+.total-warpper {
   text-align: left;
   margin-top: 30px;
 }
 h3 {
   margin-top: 10px;
 }
+
+.g-btn{
+  background-color: #409EFF;
+  border-color: #409EFF;
+}
+
 .el-button--mini{
   height: 38px;
-  background-color: #67C23A;
-  border-color: #67C23A;
+  color: #606266;
+  background-color: #DCDFE6;
+  border-color: #DCDFE6;
 }
 
 </style>

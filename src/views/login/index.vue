@@ -16,7 +16,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -33,7 +33,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -46,10 +46,7 @@
 
       <el-button :loading="loading" type="primary" @click.native.prevent="handleLogin">登录</el-button>
 
-      <div class="tips">
-        <span />
-      </div>
-
+      <div class="tips" />
     </el-form>
     <div class="bottom">
       昭通亮风台信息科技有限公司提供技术支持
@@ -65,14 +62,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名 !'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能少于6位 !'))
       } else {
         callback()
       }
@@ -179,6 +176,12 @@ $cursor: #000;
     .el-form-item__content{
       line-height: 80px;
     }
+
+    .el-form-item__error{
+      position: absolute;
+      top: 70%;
+      left: 0;
+    }
   }
 
   .el-button{
@@ -198,6 +201,7 @@ $dark_gray:#f00;
 $light_gray:#eee;
 
 .login-container {
+  position: relative;
   min-height: 100%;
   width: 100%;
   background: url(~@/assets/login_images/bg/login_bg.png) no-repeat center center;
@@ -258,13 +262,9 @@ $light_gray:#eee;
   .tips {
     width: 450px;
     height: 87px;
+    display: inline-block;
+    background:url(~@/assets/login_images/login.jpg) no-repeat;
 
-    span {
-      width: 450px;
-      height: 87px;
-      display: inline-block;
-      background:url(~@/assets/login_images/login.jpg) no-repeat;
-    }
   }
 
   .svg-container {
@@ -286,15 +286,17 @@ $light_gray:#eee;
   }
 
   .bottom{
-    color: #fff;
-    font: normal bold 14px '微软雅黑';
-    margin: 0 auto;
-    position: relative;
-    width: 336px;
+    color: #ffffff;
+    font: normal 300 14px '微软雅黑';
+    position: absolute;
+    bottom: 35px;
+    width: 301px;
+    height: 19px;
+    text-align: center;
+    letter-spacing: 1.8px;
     max-width: 100%;
-    padding: 200px 24px 0 45px;
-    margin: 0 auto;
     overflow: hidden;
+    margin: 0 43%;
   }
 }
 </style>
